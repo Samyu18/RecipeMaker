@@ -1,0 +1,1072 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Recipe Finder</title>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Quicksand', Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #f8fafc 60%, #ffe4e6 100%);
+      color: #222;
+      min-height: 100vh;
+    }
+    .hero {
+      background: linear-gradient(120deg, #fbbf24 0%, #f472b6 100%);
+      padding: 2.5rem 0 1.5rem 0;
+      text-align: center;
+      border-radius: 0 0 2.5rem 2.5rem;
+      box-shadow: 0 8px 32px #fbbf2444;
+      margin-bottom: 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero h1 {
+      font-family: 'Pacifico', cursive;
+      font-size: 3rem;
+      color: #fff;
+      margin: 0 0 0.5rem 0;
+      letter-spacing: 2px;
+      text-shadow: 0 4px 24px #f472b6cc;
+      animation: popIn 1.2s cubic-bezier(.4,0,.2,1);
+    }
+    .hero p {
+      color: #fff;
+      font-size: 1.25rem;
+      margin: 0 0 1.2rem 0;
+      font-weight: 700;
+      text-shadow: 0 2px 8px #fbbf2444;
+    }
+    .toggle-group {
+      display: flex;
+      justify-content: center;
+      gap: 1.2rem;
+      margin-bottom: 1.2rem;
+    }
+    .toggle-btn {
+      background: #fff;
+      color: #f472b6;
+      border: 2px solid #f472b6;
+      border-radius: 2rem;
+      padding: 0.5rem 1.5rem;
+      font-size: 1.1rem;
+      font-family: 'Quicksand', Arial, sans-serif;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s, border 0.2s, transform 0.15s;
+      box-shadow: 0 2px 8px #fbbf2444;
+    }
+    .toggle-btn.active {
+      background: #f472b6;
+      color: #fff;
+      border: 2px solid #fff;
+      transform: scale(1.08);
+    }
+    .container {
+      max-width: 900px;
+      margin: 0 auto 2.5rem auto;
+      background: #fff;
+      border-radius: 18px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.09);
+      padding: 2.5rem 2rem 2rem 2rem;
+      position: relative;
+      animation: fadeIn 1.2s cubic-bezier(.4,0,.2,1);
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(40px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes popIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    .fun-fact {
+      background: #f0fdf4;
+      color: #059669;
+      border-left: 6px solid #22d3ee;
+      border-radius: 8px;
+      padding: 0.7rem 1.2rem;
+      margin-bottom: 1.2rem;
+      font-size: 1.08rem;
+      font-weight: 700;
+      box-shadow: 0 1px 6px rgba(34,211,238,0.07);
+      animation: popIn 1.1s cubic-bezier(.4,0,.2,1);
+    }
+    .featured-dishes {
+      display: flex;
+      gap: 1.2rem;
+      overflow-x: auto;
+      margin-bottom: 2rem;
+      padding-bottom: 0.5rem;
+      scrollbar-width: thin;
+    }
+    .featured-card {
+      min-width: 220px;
+      background: linear-gradient(120deg, #fbbf24 0%, #f472b6 100%);
+      color: #fff;
+      border-radius: 1.2rem;
+      box-shadow: 0 2px 16px #fbbf2444;
+      padding: 1rem 1rem 1.2rem 1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-family: 'Quicksand', Arial, sans-serif;
+      font-weight: 700;
+      animation: cardPop 0.7s cubic-bezier(.4,0,.2,1);
+      transition: transform 0.15s, box-shadow 0.2s;
+    }
+    .featured-card img {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 0.7rem;
+      box-shadow: 0 2px 8px #fff6;
+      border: 3px solid #fff;
+    }
+    .featured-card:hover {
+      transform: scale(1.07) rotate(-2deg);
+      box-shadow: 0 6px 24px #f472b6cc;
+    }
+    .featured-card .dish-name {
+      font-family: 'Pacifico', cursive;
+      font-size: 1.2rem;
+      margin-bottom: 0.2rem;
+      color: #fff;
+      text-shadow: 0 2px 8px #fbbf2444;
+    }
+    .input-group {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .input-group input, .input-group select {
+      flex: 1;
+      padding: 0.75rem;
+      border: 1.5px solid #a5b4fc;
+      border-radius: 8px;
+      font-size: 1.08rem;
+      margin-bottom: 0.5rem;
+      font-family: 'Quicksand', Arial, sans-serif;
+      background: #f1f5f9;
+      transition: border 0.2s;
+    }
+    .input-group input:focus, .input-group select:focus {
+      border: 1.5px solid #2563eb;
+      outline: none;
+    }
+    .input-group button {
+      padding: 0.75rem 1.5rem;
+      background: linear-gradient(90deg, #2563eb 60%, #22d3ee 100%);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 1.08rem;
+      cursor: pointer;
+      font-family: 'Quicksand', Arial, sans-serif;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      box-shadow: 0 2px 8px #a5b4fc33;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .input-group button:hover {
+      background: linear-gradient(90deg, #1d4ed8 60%, #06b6d4 100%);
+      transform: scale(1.04);
+    }
+    .recipes {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+    @media (min-width: 700px) {
+      .recipes {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+    .recipe-card {
+      background: #f1f5f9;
+      border-radius: 12px;
+      box-shadow: 0 2px 12px #a5b4fc22;
+      padding: 1.2rem 1rem 1.5rem 1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      animation: cardPop 0.7s cubic-bezier(.4,0,.2,1);
+      transition: box-shadow 0.2s, transform 0.15s;
+    }
+    .recipe-card:hover {
+      box-shadow: 0 6px 24px #2563eb33;
+      transform: translateY(-4px) scale(1.025);
+    }
+    @keyframes cardPop {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    .recipe-card img {
+      width: 100%;
+      max-width: 220px;
+      border-radius: 8px;
+      margin-bottom: 0.75rem;
+      box-shadow: 0 2px 8px #a5b4fc33;
+      background: #e0e7ff;
+      object-fit: cover;
+      aspect-ratio: 1/1;
+      transition: filter 0.2s;
+    }
+    .recipe-card h2 {
+      font-size: 1.18rem;
+      margin: 0.5rem 0 0.25rem 0;
+      text-align: center;
+      font-family: 'Pacifico', cursive;
+      font-weight: 900;
+      color: #f472b6;
+    }
+    .ingredients {
+      font-size: 0.98rem;
+      margin-bottom: 0.5rem;
+      text-align: center;
+      color: #334155;
+    }
+    .health-points {
+      margin: 0.5rem 0 0.2rem 0;
+      font-size: 0.97rem;
+      color: #059669;
+      background: #f0fdf4;
+      border-radius: 6px;
+      padding: 0.2rem 0.7rem;
+      font-weight: 700;
+      box-shadow: 0 1px 4px #22d3ee11;
+      display: inline-block;
+      animation: popIn 0.7s cubic-bezier(.4,0,.2,1);
+    }
+    .instructions-link {
+      margin-top: 0.5rem;
+      background: linear-gradient(90deg, #22c55e 60%, #bef264 100%);
+      color: #fff;
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 7px;
+      text-decoration: none;
+      font-size: 1.01rem;
+      font-family: 'Quicksand', Arial, sans-serif;
+      font-weight: 700;
+      transition: background 0.2s, transform 0.15s;
+      display: inline-block;
+      box-shadow: 0 1px 4px #bef26433;
+    }
+    .instructions-link:hover {
+      background: linear-gradient(90deg, #16a34a 60%, #a3e635 100%);
+      transform: scale(1.05);
+    }
+    .favorite-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 1.7rem;
+      color: #eab308;
+      transition: color 0.2s, transform 0.15s;
+      z-index: 2;
+      filter: drop-shadow(0 1px 2px #fff6);
+    }
+    .favorite-btn.favorited {
+      color: #f59e42;
+      text-shadow: 0 0 4px #fbbf24;
+      transform: scale(1.15) rotate(-8deg);
+    }
+    .message {
+      text-align: center;
+      margin: 1.5rem 0;
+      color: #e11d48;
+      font-weight: 700;
+      font-size: 1.1rem;
+      font-family: 'Quicksand', Arial, sans-serif;
+    }
+    .loader {
+      border: 5px solid #f3f3f3;
+      border-top: 5px solid #2563eb;
+      border-radius: 50%;
+      width: 44px;
+      height: 44px;
+      animation: spin 1s linear infinite, loaderPop 0.7s cubic-bezier(.4,0,.2,1);
+      margin: 2rem auto;
+      box-shadow: 0 2px 8px #a5b4fc33;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    @keyframes loaderPop {
+      from { opacity: 0; transform: scale(0.7); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    .favorites-section {
+      margin-top: 2.5rem;
+      background: #fef9c3;
+      border-radius: 12px;
+      padding: 1.2rem;
+      box-shadow: 0 1px 4px #fde68a44;
+      animation: fadeIn 1.2s cubic-bezier(.4,0,.2,1);
+    }
+    .favorites-section h2 {
+      margin-top: 0;
+      color: #b45309;
+      font-size: 1.18rem;
+      font-family: 'Quicksand', Arial, sans-serif;
+      font-weight: 900;
+    }
+    .favorites-list {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    @media (max-width: 600px) {
+      .favorites-list {
+        grid-template-columns: 1fr;
+      }
+    }
+    .remove-fav-btn {
+      background: #e11d48;
+      color: #fff;
+      border: none;
+      border-radius: 7px;
+      padding: 0.3rem 0.7rem;
+      margin-top: 0.5rem;
+      cursor: pointer;
+      font-size: 0.97rem;
+      font-family: 'Quicksand', Arial, sans-serif;
+      font-weight: 700;
+      transition: background 0.2s, transform 0.15s;
+      box-shadow: 0 1px 4px #e11d4833;
+    }
+    .remove-fav-btn:hover {
+      background: #be123c;
+      transform: scale(1.07);
+    }
+  </style>
+</head>
+<body>
+  <div class="hero">
+    <h1>Recipe Finder</h1>
+    <p>Discover delicious recipes with your favorite ingredients!</p>
+    <div class="toggle-group">
+      <button class="toggle-btn active" id="allBtn">All</button>
+      <button class="toggle-btn" id="vegBtn">Veg</button>
+      <button class="toggle-btn" id="nonvegBtn">Non-Veg</button>
+    </div>
+    <button id="darkModeToggle" style="position:absolute;top:1.2rem;right:1.2rem;background:#fff;color:#f472b6;border:none;border-radius:50%;width:2.5rem;height:2.5rem;font-size:1.3rem;box-shadow:0 2px 8px #fbbf2444;cursor:pointer;">🌙</button>
+  </div>
+  <div class="container">
+    <div id="dishOfDay" style="display:none;"></div>
+    <div class="fun-fact" id="fun-fact"></div>
+    <div class="discover-section" id="discover-section" style="margin-bottom:2rem;"></div>
+    <div class="featured-dishes" id="featured-dishes"></div>
+    <form id="ingredient-form" class="input-group">
+      <input type="text" id="ingredients" placeholder="Enter ingredients (e.g. tomato, cheese, bread)" required />
+      <select id="cuisine">
+        <option value="">All Cuisines</option>
+        <option value="American">American</option>
+        <option value="British">British</option>
+        <option value="Canadian">Canadian</option>
+        <option value="Chinese">Chinese</option>
+        <option value="Dutch">Dutch</option>
+        <option value="Egyptian">Egyptian</option>
+        <option value="French">French</option>
+        <option value="Greek">Greek</option>
+        <option value="Indian">Indian</option>
+        <option value="Irish">Irish</option>
+        <option value="Italian">Italian</option>
+        <option value="Jamaican">Jamaican</option>
+        <option value="Japanese">Japanese</option>
+        <option value="Kenyan">Kenyan</option>
+        <option value="Malaysian">Malaysian</option>
+        <option value="Mexican">Mexican</option>
+        <option value="Moroccan">Moroccan</option>
+        <option value="Russian">Russian</option>
+        <option value="Spanish">Spanish</option>
+        <option value="Thai">Thai</option>
+        <option value="Tunisian">Tunisian</option>
+        <option value="Turkish">Turkish</option>
+        <option value="Vietnamese">Vietnamese</option>
+      </select>
+      <select id="category">
+        <option value="">All Categories</option>
+        <option value="Beef">Beef</option>
+        <option value="Breakfast">Breakfast</option>
+        <option value="Chicken">Chicken</option>
+        <option value="Dessert">Dessert</option>
+        <option value="Goat">Goat</option>
+        <option value="Lamb">Lamb</option>
+        <option value="Miscellaneous">Miscellaneous</option>
+        <option value="Pasta">Pasta</option>
+        <option value="Pork">Pork</option>
+        <option value="Seafood">Seafood</option>
+        <option value="Side">Side</option>
+        <option value="Snack">Snack</option>
+        <option value="Starter">Starter</option>
+        <option value="Vegan">Vegan</option>
+        <option value="Vegetarian">Vegetarian</option>
+        <option value="Breakfast">Breakfast</option>
+        <option value="Drink">Drink</option>
+      </select>
+      <select id="mealTime">
+        <option value="">All Meal Times</option>
+        <option value="Breakfast">Breakfast</option>
+        <option value="Lunch">Lunch</option>
+        <option value="Dinner">Dinner</option>
+        <option value="Snack">Snack</option>
+        <option value="Dessert">Dessert</option>
+        <option value="Drink">Drink</option>
+      </select>
+      <select id="audience">
+        <option value="">All Audiences</option>
+        <option value="Kids">Kids</option>
+        <option value="Adults">Adults</option>
+      </select>
+      <select id="diet">
+        <option value="">All Diets</option>
+        <option value="Vegetarian">Vegetarian</option>
+        <option value="Vegan">Vegan</option>
+        <option value="Gluten-Free">Gluten-Free</option>
+      </select>
+      <button type="submit">Find Recipes</button>
+    </form>
+    <div id="message" class="message"></div>
+    <div id="loader" class="loader" style="display:none;"></div>
+    <div id="recipes" class="recipes"></div>
+    <div class="favorites-section">
+      <h2>Favorites</h2>
+      <div id="favorites" class="favorites-list"></div>
+    </div>
+  </div>
+  <script>
+    // Fun facts array
+    const funFacts = [
+      "Did you know? Carrots were originally purple, not orange!",
+      "Tomatoes are actually a fruit, not a vegetable.",
+      "Honey never spoils. Archaeologists have found 3000-year-old honey in Egyptian tombs!",
+      "Broccoli contains more protein than steak (per calorie).",
+      "Bananas are berries, but strawberries aren't!",
+      "Apples float in water because they are 25% air.",
+      "The most expensive pizza in the world costs over $12,000!",
+      "Potatoes were the first food grown in space.",
+      "Peanuts are not nuts—they're legumes.",
+      "Red bell peppers have more vitamin C than oranges.",
+      "Oysters can change from male to female and back again.",
+      "Cucumbers are 96% water!",
+      "The fear of cooking is called Mageirocophobia.",
+      "Avocados are poisonous to birds.",
+      "The world’s largest omelette weighed 6.8 tons!"
+    ];
+    document.getElementById('fun-fact').textContent = funFacts[Math.floor(Math.random() * funFacts.length)];
+
+    // Featured dishes (static for demo, can be randomized or fetched)
+    const featured = [
+      { name: "Margherita Pizza", img: "https://images.unsplash.com/photo-1519864600265-abb23847ef2c?auto=format&fit=crop&w=400&q=80" },
+      { name: "Chicken Biryani", img: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=400&q=80" },
+      { name: "Sushi Platter", img: "https://images.unsplash.com/photo-1464306076886-debca5e8a6b0?auto=format&fit=crop&w=400&q=80" },
+      { name: "Falafel Wrap", img: "https://images.unsplash.com/photo-1502741338009-cac2772e18bc?auto=format&fit=crop&w=400&q=80" },
+      { name: "Tacos", img: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=400&q=80" },
+      { name: "Pasta Carbonara", img: "https://images.unsplash.com/photo-1523987355523-c7b5b0723c6a?auto=format&fit=crop&w=400&q=80" },
+      { name: "Paneer Tikka", img: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=400&q=80" },
+      { name: "Fish Curry", img: "https://images.unsplash.com/photo-1502741338009-cac2772e18bc?auto=format&fit=crop&w=400&q=80" }
+    ];
+    const featuredDiv = document.getElementById('featured-dishes');
+    featured.forEach(dish => {
+      const card = document.createElement('div');
+      card.className = 'featured-card';
+      card.innerHTML = `<img src="${dish.img}" alt="${dish.name}" /><div class="dish-name">${dish.name}</div>`;
+      featuredDiv.appendChild(card);
+    });
+
+    // Veg/Non-Veg toggle logic
+    let vegFilter = 'all';
+    document.getElementById('allBtn').onclick = function() {
+      vegFilter = 'all';
+      setToggleActive(this);
+      if (window.lastRecipes) displayRecipes(window.lastRecipes, window.lastIngredients);
+    };
+    document.getElementById('vegBtn').onclick = function() {
+      vegFilter = 'veg';
+      setToggleActive(this);
+      if (window.lastRecipes) displayRecipes(window.lastRecipes, window.lastIngredients);
+    };
+    document.getElementById('nonvegBtn').onclick = function() {
+      vegFilter = 'nonveg';
+      setToggleActive(this);
+      if (window.lastRecipes) displayRecipes(window.lastRecipes, window.lastIngredients);
+    };
+    function setToggleActive(btn) {
+      document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    }
+
+    // Use Flask backend endpoints
+    const API_URL = '/api/recipes';
+    const LOOKUP_URL = '/api/recipe/';
+
+    const form = document.getElementById('ingredient-form');
+    const input = document.getElementById('ingredients');
+    const cuisineSelect = document.getElementById('cuisine');
+    const categorySelect = document.getElementById('category');
+    const mealTimeSelect = document.getElementById('mealTime');
+    const audienceSelect = document.getElementById('audience');
+    const dietSelect = document.getElementById('diet');
+    const recipesDiv = document.getElementById('recipes');
+    const messageDiv = document.getElementById('message');
+    const loader = document.getElementById('loader');
+    const favoritesDiv = document.getElementById('favorites');
+
+    // Fallback image for missing recipe images
+    const fallbackImg = 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=400&q=80';
+
+    // Favorites in localStorage
+    function getFavorites() {
+      return JSON.parse(localStorage.getItem('favorites') || '[]');
+    }
+    function saveFavorites(favs) {
+      localStorage.setItem('favorites', JSON.stringify(favs));
+    }
+    function isFavorited(id) {
+      return getFavorites().some(fav => fav.idMeal === id);
+    }
+    function addFavorite(meal) {
+      const favs = getFavorites();
+      if (!favs.some(fav => fav.idMeal === meal.idMeal)) {
+        favs.push(meal);
+        saveFavorites(favs);
+        renderFavorites();
+      }
+    }
+    function removeFavorite(id) {
+      const favs = getFavorites().filter(fav => fav.idMeal !== id);
+      saveFavorites(favs);
+      renderFavorites();
+    }
+    function renderFavorites() {
+      const favs = getFavorites();
+      favoritesDiv.innerHTML = '';
+      if (favs.length === 0) {
+        favoritesDiv.innerHTML = '<div style="color:#b45309;">No favorites yet.</div>';
+        return;
+      }
+      favs.forEach(meal => {
+        const card = document.createElement('div');
+        card.className = 'recipe-card';
+        card.innerHTML = `
+          <img src="${meal.strMealThumb || fallbackImg}" alt="${meal.strMeal}" onerror="this.src='${fallbackImg}'" />
+          <h2>${meal.strMeal}</h2>
+          <div class="health-points">${getHealthPoints(meal)}</div>
+          <button class="remove-fav-btn">Remove</button>
+          <a class="instructions-link" href="#" data-id="${meal.idMeal}">View Instructions</a>
+        `;
+        card.querySelector('.remove-fav-btn').onclick = () => removeFavorite(meal.idMeal);
+        card.querySelector('.instructions-link').onclick = (e) => {
+          e.preventDefault();
+          showInstructions(meal);
+        };
+        favoritesDiv.appendChild(card);
+      });
+    }
+
+    // Dark mode toggle
+    document.getElementById('darkModeToggle').onclick = function() {
+      document.body.classList.toggle('dark-mode');
+      this.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
+    };
+    // Add dark mode styles
+    const darkStyle = document.createElement('style');
+    darkStyle.innerHTML = `
+      body.dark-mode { background: #18181b; color: #f1f5f9; }
+      body.dark-mode .container { background: #23232b; box-shadow: 0 4px 24px #000a; }
+      body.dark-mode .hero { background: linear-gradient(120deg, #0ea5e9 0%, #a21caf 100%); box-shadow: 0 8px 32px #0ea5e944; }
+      body.dark-mode .fun-fact { background: #23232b; color: #38bdf8; border-left: 6px solid #a21caf; }
+      body.dark-mode .recipe-card, body.dark-mode .featured-card { background: #23232b; color: #f1f5f9; }
+      body.dark-mode .favorites-section { background: #fef08a; color: #a16207; }
+      body.dark-mode .input-group input, body.dark-mode .input-group select { background: #18181b; color: #f1f5f9; border: 1.5px solid #a21caf; }
+      body.dark-mode .input-group button { background: linear-gradient(90deg, #a21caf 60%, #0ea5e9 100%); color: #fff; }
+      body.dark-mode .input-group button:hover { background: linear-gradient(90deg, #7c3aed 60%, #0ea5e9 100%); }
+      body.dark-mode .dish-name { color: #fbbf24 !important; text-shadow: 0 2px 8px #000a; }
+      body.dark-mode .instructions-link, body.dark-mode .remove-fav-btn { background: #0ea5e9 !important; color: #fff !important; }
+      body.dark-mode .health-points { background: #0f172a; color: #38bdf8; }
+      body.dark-mode .message { color: #f472b6; }
+      body.dark-mode #dishOfDay { color: #fff; }
+      body.dark-mode .discover-section { color: #fbbf24; }
+      body.dark-mode .featured-card { border: 1.5px solid #334155; }
+      body.dark-mode .modal-content, body.dark-mode #instructions-modal > div { background: #23232b !important; color: #f1f5f9 !important; }
+      body.dark-mode .modal-content h2, body.dark-mode #instructions-modal h2 { color: #fbbf24 !important; }
+      body.dark-mode .modal-content b, body.dark-mode #instructions-modal b { color: #38bdf8 !important; }
+      body.dark-mode .modal-content .instructions-link, body.dark-mode #instructions-modal .instructions-link { background: #a21caf !important; color: #fff !important; }
+    `;
+    document.head.appendChild(darkStyle);
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const ingredients = input.value.trim();
+      const cuisine = cuisineSelect.value;
+      const category = categorySelect.value;
+      const mealTime = mealTimeSelect.value;
+      const audience = audienceSelect.value;
+      const diet = dietSelect.value;
+      if (!ingredients) return;
+      recipesDiv.innerHTML = '';
+      messageDiv.textContent = '';
+      loader.style.display = 'block';
+      try {
+        const url = `${API_URL}?ingredients=${encodeURIComponent(ingredients)}`;
+        const res = await fetch(url);
+        const data = await res.json();
+        let recipes = data.meals || [];
+        // Filter by cuisine
+        if (cuisine) {
+          recipes = recipes.filter(meal => meal.strArea && meal.strArea.toLowerCase() === cuisine.toLowerCase());
+        }
+        // Filter by category
+        if (category) {
+          recipes = recipes.filter(meal => meal.strCategory && meal.strCategory.toLowerCase() === category.toLowerCase());
+        }
+        // Filter by meal time
+        if (mealTime) {
+          recipes = recipes.filter(meal => (meal.strCategory || '').toLowerCase().includes(mealTime.toLowerCase()));
+        }
+        // Filter by audience (precise logic)
+        if (audience) {
+          recipes = recipes.filter(meal => {
+            const name = (meal.strMeal || '').toLowerCase();
+            const cat = (meal.strCategory || '').toLowerCase();
+            const tags = (meal.strTags || '').toLowerCase();
+            if (audience === 'Kids') {
+              return name.includes('kid') || cat.includes('snack') || cat.includes('dessert') || cat.includes('breakfast') || tags.includes('kids') || tags.includes('child') || tags.includes('party');
+            } else if (audience === 'Adults') {
+              return !name.includes('kid') && !cat.includes('snack') && !cat.includes('dessert') && !cat.includes('breakfast') && !tags.includes('kids') && !tags.includes('child') && !tags.includes('party');
+            }
+            return true;
+          });
+        }
+        // Filter by diet (simple, based on tags/ingredients)
+        if (diet) {
+          recipes = recipes.filter(meal => {
+            const tags = (meal.strTags || '').toLowerCase();
+            const ings = Array.from({length: 20}, (_,i) => (meal[`strIngredient${i+1}`]||'').toLowerCase());
+            if (diet === 'Vegetarian') {
+              return tags.includes('vegetarian') || !ings.some(ing => ['chicken','beef','pork','fish','lamb','shrimp','bacon','ham','duck','turkey','anchovy','salmon','crab','lobster','clam','mussel','oyster'].includes(ing));
+            }
+            if (diet === 'Vegan') {
+              return tags.includes('vegan') || !ings.some(ing => ['egg','milk','cheese','butter','cream','yogurt','honey','chicken','beef','pork','fish','lamb','shrimp','bacon','ham','duck','turkey','anchovy','salmon','crab','lobster','clam','mussel','oyster'].includes(ing));
+            }
+            if (diet === 'Gluten-Free') {
+              return tags.includes('gluten-free') || !ings.some(ing => ['bread','pasta','flour','wheat','barley','rye','spaghetti','noodle','biscuit','cake','cracker','couscous','bulgur'].includes(ing));
+            }
+            return true;
+          });
+        }
+        // Veg/Non-Veg toggle
+        if (vegFilter === 'veg') {
+          recipes = recipes.filter(meal => isVeg(meal));
+        } else if (vegFilter === 'nonveg') {
+          recipes = recipes.filter(meal => !isVeg(meal));
+        }
+        loader.style.display = 'none';
+        if (!recipes || recipes.length === 0) {
+          messageDiv.textContent = 'No recipes found for those filters.';
+          document.getElementById('dishOfDay').style.display = 'none';
+          return;
+        }
+        window.lastRecipes = recipes;
+        window.lastIngredients = ingredients;
+        showDishOfDay(recipes);
+        displayRecipes(recipes, ingredients);
+      } catch (err) {
+        loader.style.display = 'none';
+        messageDiv.textContent = 'Error fetching recipes. Please try again later.';
+      }
+    });
+
+    // Simple veg/non-veg classifier
+    function isVeg(meal) {
+      const nonveg = ['chicken','beef','pork','fish','lamb','shrimp','bacon','ham','duck','turkey','anchovy','salmon','crab','lobster','clam','mussel','oyster'];
+      for (let i = 1; i <= 20; i++) {
+        const ing = (meal['strIngredient' + i] || '').toLowerCase();
+        if (!ing) continue;
+        if (nonveg.some(nv => ing.includes(nv))) return false;
+      }
+      return true;
+    }
+
+    function displayRecipes(recipes, userIngredients) {
+      recipesDiv.innerHTML = '';
+      const userIngs = userIngredients.split(',').map(i => i.trim().toLowerCase());
+      recipes.forEach(meal => {
+        const mealIngredients = [];
+        for (let i = 1; i <= 20; i++) {
+          const ing = meal['strIngredient' + i];
+          if (ing && ing.trim() !== '') mealIngredients.push(ing.trim().toLowerCase());
+        }
+        const used = mealIngredients.filter(ing => userIngs.includes(ing));
+        const missing = mealIngredients.filter(ing => !userIngs.includes(ing));
+        const card = document.createElement('div');
+        card.className = 'recipe-card';
+        const preview = (meal.strInstructions || '').split(/\.|\n/).slice(0,2).join('. ') + '...';
+        // Badges
+        let badges = '';
+        if ((meal.strTags || '').toLowerCase().includes('quick') || (meal.strInstructions||'').split(' ').length < 60) badges += '<span style="background:#22c55e;color:#fff;padding:0.2rem 0.7rem;border-radius:1rem;font-size:0.85rem;margin-right:0.3rem;">Quick</span>';
+        if ((meal.strTags || '').toLowerCase().includes('healthy') || getHealthPoints(meal).includes('Veggies')) badges += '<span style="background:#0ea5e9;color:#fff;padding:0.2rem 0.7rem;border-radius:1rem;font-size:0.85rem;margin-right:0.3rem;">Healthy</span>';
+        if ((meal.strTags || '').toLowerCase().includes('popular') || (meal.strCategory||'').toLowerCase().includes('dessert')) badges += '<span style="background:#fbbf24;color:#fff;padding:0.2rem 0.7rem;border-radius:1rem;font-size:0.85rem;margin-right:0.3rem;">Popular</span>';
+        card.innerHTML = `
+          <button class="favorite-btn${isFavorited(meal.idMeal) ? ' favorited' : ''}" title="Add to Favorites">&#9733;</button>
+          <div class="img-wrapper" style="position:relative;width:100%;max-width:220px;">
+            <img src="${meal.strMealThumb || fallbackImg}" alt="${meal.strMeal}" onerror="this.src='${fallbackImg}'" style="width:100%;border-radius:8px;object-fit:cover;aspect-ratio:1/1;filter:blur(8px);transition:filter 0.5s;" onload="this.style.filter='none'" />
+            <button class="share-btn" title="Share" style="position:absolute;bottom:10px;right:10px;background:#fff;color:#f472b6;border:none;border-radius:50%;width:2rem;height:2rem;font-size:1.1rem;box-shadow:0 1px 4px #fbbf2444;cursor:pointer;">🔗</button>
+          </div>
+          <h2>${meal.strMeal}</h2>
+          <div style="margin-bottom:0.3rem;font-size:0.97rem;color:#f59e42;">${meal.strCategory || ''} | ${meal.strArea || ''}</div>
+          <div>${badges}</div>
+          <div class="health-points">${getHealthPoints(meal)}</div>
+          <div class="ingredients">
+            <strong>Used:</strong> ${used.join(', ') || 'None'}<br/>
+            <strong>Missing:</strong> ${missing.join(', ') || 'None'}
+          </div>
+          <div style="margin:0.5rem 0 0.2rem 0;font-size:0.97rem;color:#334155;">${preview}</div>
+          <a class="instructions-link" href="#" data-id="${meal.idMeal}">View Instructions</a>
+        `;
+        card.querySelector('.favorite-btn').onclick = () => {
+          if (isFavorited(meal.idMeal)) {
+            removeFavorite(meal.idMeal);
+            card.querySelector('.favorite-btn').classList.remove('favorited');
+          } else {
+            addFavorite(meal);
+            card.querySelector('.favorite-btn').classList.add('favorited');
+            // Confetti animation
+            confetti(card.querySelector('.favorite-btn'));
+          }
+        };
+        card.querySelector('.share-btn').onclick = (e) => {
+          e.preventDefault();
+          const url = window.location.origin + '?id=' + meal.idMeal;
+          navigator.clipboard.writeText(url);
+          card.querySelector('.share-btn').textContent = '✅';
+          setTimeout(()=>{card.querySelector('.share-btn').textContent='🔗';},1200);
+        };
+        card.querySelector('.instructions-link').onclick = async (e) => {
+          e.preventDefault();
+          // Always fetch latest details from backend
+          const res = await fetch(LOOKUP_URL + meal.idMeal);
+          const data = await res.json();
+          showInstructionsModal(data.meal || meal);
+        };
+        recipesDiv.appendChild(card);
+      });
+    }
+
+    // Health points: count veggies, protein, etc.
+    function getHealthPoints(meal) {
+      const veggies = ['tomato','onion','carrot','spinach','lettuce','broccoli','pepper','cabbage','pea','bean','zucchini','eggplant','cauliflower','celery','corn','cucumber','garlic','leek','mushroom','okra','pumpkin','radish','turnip','yam','sweet potato','asparagus','artichoke','avocado','beet','brussels sprout','chard','kale','parsnip','squash','watercress'];
+      const proteins = ['egg','chicken','beef','pork','fish','lamb','shrimp','bacon','ham','duck','turkey','anchovy','salmon','crab','lobster','clam','mussel','oyster','tofu','tempeh','lentil','bean','chickpea','cheese','milk','yogurt','paneer','seitan'];
+      const fruits = ['apple','banana','orange','lemon','lime','grape','berry','strawberry','blueberry','raspberry','mango','pineapple','peach','pear','plum','apricot','cherry','fig','grapefruit','kiwi','melon','nectarine','papaya','passionfruit','persimmon','pomegranate','watermelon'];
+      let vegCount = 0, protCount = 0, fruitCount = 0;
+      for (let i = 1; i <= 20; i++) {
+        const ing = (meal['strIngredient' + i] || '').toLowerCase();
+        if (!ing) continue;
+        if (veggies.some(v => ing.includes(v))) vegCount++;
+        if (proteins.some(p => ing.includes(p))) protCount++;
+        if (fruits.some(f => ing.includes(f))) fruitCount++;
+      }
+      let points = [];
+      if (vegCount) points.push(`🥦 Veggies: <b>${vegCount}</b>`);
+      if (protCount) points.push(`🍳 Protein: <b>${protCount}</b>`);
+      if (fruitCount) points.push(`🍎 Fruits: <b>${fruitCount}</b>`);
+      if (!points.length) return '🌈 Balanced!';
+      return points.join(' &nbsp; ');
+    }
+
+    function showInstructions(meal) {
+      const instructions = (meal.strInstructions || '').replace(/\r?\n/g, '<br/>');
+      recipesDiv.innerHTML = `
+        <div class="recipe-card" style="max-width:600px;margin:0 auto;">
+          <img src="${meal.strMealThumb || fallbackImg}" alt="${meal.strMeal}" onerror="this.src='${fallbackImg}'" />
+          <h2>${meal.strMeal}</h2>
+          <div class="health-points">${getHealthPoints(meal)}</div>
+          <div class="ingredients">
+            <strong>Ingredients:</strong><br/>
+            ${getIngredientsList(meal)}
+          </div>
+          <div style="margin:1rem 0;"><strong>Instructions:</strong><br/>${instructions}</div>
+          <a class="instructions-link" href="${meal.strSource || '#'}" target="_blank">Source</a>
+          <button class="instructions-link" style="background:#2563eb;margin-left:1rem;" onclick="window.location.reload()">Back to Results</button>
+        </div>
+      `;
+    }
+
+    // Modal for full instructions
+    function showInstructionsModal(meal, fromDiscover) {
+      let modal = document.getElementById('instructions-modal');
+      if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'instructions-modal';
+        modal.style.position = 'fixed';
+        modal.style.top = '0';
+        modal.style.left = '0';
+        modal.style.width = '100vw';
+        modal.style.height = '100vh';
+        modal.style.background = 'rgba(0,0,0,0.45)';
+        modal.style.display = 'flex';
+        modal.style.alignItems = 'center';
+        modal.style.justifyContent = 'center';
+        modal.style.zIndex = '9999';
+        document.body.appendChild(modal);
+      }
+      modal.innerHTML = `
+        <div style="background:#fff;border-radius:16px;max-width:500px;width:95vw;max-height:80vh;overflow-y:auto;padding:2rem;box-shadow:0 8px 32px #0002;position:relative;animation:popIn 0.5s;">
+          <button onclick="document.getElementById('instructions-modal').remove()" style="position:absolute;top:1rem;right:1rem;background:#f472b6;color:#fff;border:none;border-radius:50%;width:2.2rem;height:2.2rem;font-size:1.3rem;cursor:pointer;z-index:10;box-shadow:0 2px 8px #0004;">&times;</button>
+          <img src="${meal.strMealThumb || fallbackImg}" alt="${meal.strMeal}" style="width:100%;max-width:320px;display:block;margin:0 auto 1rem auto;border-radius:10px;box-shadow:0 2px 8px #fbbf2444;"/>
+          <h2 style="font-family:'Pacifico',cursive;color:#f472b6;text-align:center;">${meal.strMeal}</h2>
+          <div style="text-align:center;margin-bottom:0.5rem;color:#f59e42;">${meal.strCategory || ''} | ${meal.strArea || ''}</div>
+          <div class="health-points" style="display:inline-block;margin-bottom:0.7rem;">${getHealthPoints(meal)}</div>
+          <div style="margin:1rem 0 0.5rem 0;"><strong>Ingredients:</strong><br/>${getIngredientsList(meal)}</div>
+          <div style="margin:1rem 0;"><strong>Instructions:</strong><br/>${(meal.strInstructions || '').replace(/\r?\n/g, '<br/>')}</div>
+          <a class="instructions-link" href="${meal.strSource || '#'}" target="_blank">Source</a>
+          <button class="instructions-link" style="background:#2563eb;margin-top:1rem;" onclick="document.getElementById('instructions-modal').remove()">Close</button>
+        </div>
+      `;
+    }
+
+    function getIngredientsList(meal) {
+      let list = '<ul style="padding-left:1.2em;">';
+      for (let i = 1; i <= 20; i++) {
+        const ing = meal['strIngredient' + i];
+        const measure = meal['strMeasure' + i];
+        if (ing && ing.trim() !== '') {
+          list += `<li>${ing}${measure ? ' - ' + measure : ''}</li>`;
+        }
+      }
+      list += '</ul>';
+      return list;
+    }
+
+    // Dish of the Day
+    function showDishOfDay(recipes) {
+      if (!recipes || recipes.length === 0) return;
+      const meal = recipes[Math.floor(Math.random() * recipes.length)];
+      const dishDiv = document.getElementById('dishOfDay');
+      dishDiv.style.display = 'block';
+      dishDiv.innerHTML = `
+        <div style="background:linear-gradient(90deg,#fbbf24 60%,#f472b6 100%);color:#fff;border-radius:1.2rem;box-shadow:0 2px 16px #fbbf2444;padding:1.2rem 1rem 1.5rem 1rem;display:flex;align-items:center;gap:1.2rem;margin-bottom:2rem;animation:cardPop 0.7s cubic-bezier(.4,0,.2,1);">
+          <img src="${meal.strMealThumb || fallbackImg}" alt="${meal.strMeal}" onerror="this.src='${fallbackImg}'" style="width:100px;height:100px;border-radius:50%;object-fit:cover;box-shadow:0 2px 8px #fff6;border:3px solid #fff;"/>
+          <div>
+            <div style="font-family:'Pacifico',cursive;font-size:1.3rem;">Dish of the Day</div>
+            <div style="font-size:1.1rem;font-weight:700;">${meal.strMeal}</div>
+            <div style="font-size:0.97rem;color:#fef9c3;">${meal.strCategory || ''} | ${meal.strArea || ''}</div>
+            <div style="margin-top:0.3rem;font-size:0.97rem;">${(meal.strInstructions || '').split(/\.|\n/).slice(0,1).join('. ')}...</div>
+          </div>
+        </div>
+      `;
+    }
+
+    // --- Discover Section: Mix of Real API and Creative Static Dishes ---
+    // Fetch real API recipes for Discover section (multiple categories)
+    async function fetchDiscoverRecipes() {
+      const categories = ['Beef','Chicken','Seafood','Pasta','Dessert','Vegetarian','Vegan','Breakfast','Side','Snack'];
+      const realDishes = [];
+      for (const cat of categories) {
+        const res = await fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?c=${cat}`);
+        const data = await res.json();
+        if (data.meals && data.meals.length > 0) {
+          // Pick a random meal from this category
+          const meal = data.meals[Math.floor(Math.random() * data.meals.length)];
+          // Fetch full details
+          const detailRes = await fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${meal.idMeal}`);
+          const detailData = await detailRes.json();
+          if (detailData.meals && detailData.meals[0]) realDishes.push(detailData.meals[0]);
+        }
+        if (realDishes.length >= 8) break;
+      }
+      return realDishes;
+    }
+
+    // Add more creative static dishes for meat, seafood, snacks, etc.
+    const creativeDishes = [
+      {
+        name: "Rainbow Veggie Rolls",
+        img: "https://images.unsplash.com/photo-1502741338009-cac2772e18bc?auto=format&fit=crop&w=400&q=80",
+        funFact: "Rice paper rolls are a staple in Vietnamese cuisine!",
+        tip: "Use a damp towel to keep your rice paper soft while rolling.",
+        fantasy: "Fill with your favorite veggies, herbs, and a dash of peanut sauce for a healthy, colorful snack!"
+      },
+      {
+        name: "Chocolate Dream Shake",
+        img: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=400&q=80",
+        funFact: "Chocolate was once used as currency by the Aztecs!",
+        tip: "Blend with frozen banana for extra creaminess.",
+        fantasy: "A rich, frothy shake with cocoa, banana, and a sprinkle of cinnamon."
+      },
+      {
+        name: "Sunrise Breakfast Bowl",
+        img: "https://images.unsplash.com/photo-1519864600265-abb23847ef2c?auto=format&fit=crop&w=400&q=80",
+        funFact: "Oats are among the healthiest grains on earth!",
+        tip: "Top with fresh fruit and a drizzle of honey.",
+        fantasy: "Layer oats, yogurt, berries, and seeds for a power-packed start!"
+      },
+      {
+        name: "Magic Mango Lassi",
+        img: "https://images.unsplash.com/photo-1464306076886-debca5e8a6b0?auto=format&fit=crop&w=400&q=80",
+        funFact: "Mango is the national fruit of India!",
+        tip: "Use chilled yogurt for the best taste.",
+        fantasy: "Blend ripe mango, yogurt, and a pinch of cardamom for a refreshing drink."
+      },
+      {
+        name: "Spicy Chicken Wings",
+        img: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=400&q=80",
+        funFact: "Buffalo wings were invented in Buffalo, New York!",
+        tip: "Marinate overnight for extra flavor.",
+        fantasy: "Crispy wings tossed in a spicy, tangy sauce—perfect for game night!"
+      },
+      {
+        name: "Classic Beef Burger",
+        img: "https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=400&q=80",
+        funFact: "The hamburger was named after Hamburg, Germany!",
+        tip: "Don’t press the patty while grilling to keep it juicy.",
+        fantasy: "Juicy beef patty, melty cheese, and all your favorite toppings on a toasted bun."
+      },
+      {
+        name: "Seafood Paella",
+        img: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=400&q=80",
+        funFact: "Paella originated in Valencia, Spain!",
+        tip: "Use saffron for authentic flavor and color.",
+        fantasy: "A medley of shrimp, mussels, and rice cooked in a fragrant saffron broth."
+      },
+      {
+        name: "Crispy Potato Snacks",
+        img: "https://images.unsplash.com/photo-1502741338009-cac2772e18bc?auto=format&fit=crop&w=400&q=80",
+        funFact: "Potatoes are the world’s fourth-largest food crop!",
+        tip: "Soak potato slices in water before frying for extra crispiness.",
+        fantasy: "Thinly sliced potatoes fried to golden perfection—add your favorite seasoning!"
+      }
+    ];
+
+    // Render Discover section
+    async function renderDiscoverSection() {
+      const discoverDiv = document.getElementById('discover-section');
+      discoverDiv.innerHTML = '<div style="font-family:Pacifico,cursive;font-size:1.3rem;color:#f472b6;margin-bottom:0.7rem;">Discover</div>';
+      const realDishes = await fetchDiscoverRecipes();
+      const allDishes = [
+        ...realDishes.map(meal => ({
+          type: 'real',
+          id: meal.idMeal,
+          name: meal.strMeal,
+          img: meal.strMealThumb,
+          meal
+        })),
+        ...creativeDishes.map(dish => ({
+          type: 'creative',
+          ...dish
+        }))
+      ];
+      // Shuffle for variety
+      for (let i = allDishes.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [allDishes[i], allDishes[j]] = [allDishes[j], allDishes[i]];
+      }
+      const grid = document.createElement('div');
+      grid.style.display = 'flex';
+      grid.style.gap = '1.2rem';
+      grid.style.overflowX = 'auto';
+      grid.style.marginBottom = '1.5rem';
+      allDishes.forEach(dish => {
+        const card = document.createElement('div');
+        card.className = 'featured-card';
+        card.style.cursor = 'pointer';
+        card.style.position = 'relative';
+        card.innerHTML = `
+          <div style="position:relative;display:flex;flex-direction:column;align-items:center;">
+            <span style="position:absolute;top:8px;left:50%;transform:translateX(-50%);font-size:2.3rem;z-index:3;background:#fff;border-radius:50%;box-shadow:0 2px 8px #0002;padding:2px 6px;line-height:1;">🧑‍🍳</span>
+            <img src="${dish.img}" alt="${dish.name}" style="width:120px;height:120px;border-radius:50%;object-fit:cover;margin-bottom:0.7rem;box-shadow:0 2px 8px #fff6;border:3px solid #fff;z-index:1;position:relative;" onerror="this.src='https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=400&q=80'" />
+          </div>
+          <div class="dish-name">${dish.name}</div>
+          <button class="instructions-link" style="margin-top:0.7rem;">Let's Cook!</button>
+        `;
+        card.onmouseenter = () => card.style.transform = 'scale(1.07) rotate(-2deg)';
+        card.onmouseleave = () => card.style.transform = '';
+        card.querySelector('button').onclick = (e) => {
+          e.stopPropagation();
+          if (dish.type === 'real') {
+            showInstructionsModal(dish.meal, true);
+          } else {
+            showCreativeModal(dish);
+          }
+        };
+        card.onclick = () => card.querySelector('button').click();
+        grid.appendChild(card);
+      });
+      discoverDiv.appendChild(grid);
+    }
+    renderDiscoverSection();
+
+    // Creative modal for static dishes
+    function showCreativeModal(dish) {
+      let modal = document.getElementById('instructions-modal');
+      if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'instructions-modal';
+        modal.style.position = 'fixed';
+        modal.style.top = '0';
+        modal.style.left = '0';
+        modal.style.width = '100vw';
+        modal.style.height = '100vh';
+        modal.style.background = 'rgba(0,0,0,0.45)';
+        modal.style.display = 'flex';
+        modal.style.alignItems = 'center';
+        modal.style.justifyContent = 'center';
+        modal.style.zIndex = '9999';
+        document.body.appendChild(modal);
+      }
+      modal.innerHTML = `
+        <div style="background:#fff;border-radius:16px;max-width:500px;width:95vw;max-height:80vh;overflow-y:auto;padding:2rem;box-shadow:0 8px 32px #0002;position:relative;animation:popIn 0.5s;">
+          <button onclick="document.getElementById('instructions-modal').remove()" style="position:absolute;top:1rem;right:1rem;background:#f472b6;color:#fff;border:none;border-radius:50%;width:2.2rem;height:2.2rem;font-size:1.3rem;cursor:pointer;z-index:10;box-shadow:0 2px 8px #0004;">&times;</button>
+          <img src="${dish.img}" alt="${dish.name}" style="width:100%;max-width:320px;display:block;margin:0 auto 1rem auto;border-radius:10px;box-shadow:0 2px 8px #fbbf2444;"/>
+          <h2 style="font-family:'Pacifico',cursive;color:#f472b6;text-align:center;">${dish.name}</h2>
+          <div style="margin:0.7rem 0 0.5rem 0;font-size:1.05rem;color:#059669;"><b>Fun Fact:</b> ${dish.funFact}</div>
+          <div style="margin:0.5rem 0 0.5rem 0;font-size:1.01rem;color:#0ea5e9;"><b>Tip:</b> ${dish.tip}</div>
+          <div style="margin:1rem 0 0.5rem 0;"><b>Fantasy Recipe:</b><br/>${dish.fantasy}</div>
+          <button class="instructions-link" style="background:#2563eb;margin-top:1rem;" onclick="document.getElementById('instructions-modal').remove()">Close</button>
+        </div>
+      `;
+    }
+
+    // Render favorites on load
+    renderFavorites();
+
+    // Confetti animation
+    function confetti(target) {
+      for (let i = 0; i < 18; i++) {
+        const conf = document.createElement('div');
+        conf.style.position = 'absolute';
+        conf.style.left = '50%';
+        conf.style.top = '50%';
+        conf.style.width = '8px';
+        conf.style.height = '8px';
+        conf.style.background = `hsl(${Math.random()*360},90%,60%)`;
+        conf.style.borderRadius = '50%';
+        conf.style.pointerEvents = 'none';
+        conf.style.zIndex = '999';
+        conf.style.transform = `translate(-50%,-50%) scale(${Math.random()*1.2+0.7})`;
+        conf.style.opacity = '0.85';
+        conf.style.transition = 'all 1s cubic-bezier(.4,0,.2,1)';
+        target.parentElement.appendChild(conf);
+        setTimeout(()=>{
+          conf.style.left = `${50+Math.random()*60-30}%`;
+          conf.style.top = `${50+Math.random()*60-30}%`;
+          conf.style.opacity = '0';
+        },10);
+        setTimeout(()=>conf.remove(),1100);
+      }
+    }
+  </script>
+</body>
+</html> 
