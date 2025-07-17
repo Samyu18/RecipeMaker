@@ -47,4 +47,4 @@ git push origin main
 
 Your project will then be live at: [https://github.com/Samyu18/RecipeMaker](https://github.com/Samyu18/RecipeMaker)
 
-If you want a more detailed README or want to include screenshots, let me know!# RecipeMaker
+If you want a more detailed README or want to include screenshots, let me know!
